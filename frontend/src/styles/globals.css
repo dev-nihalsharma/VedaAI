@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html, body {
+  background-color: #f3f4f6;
+  color: #101218;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Print styles for the question paper output. */
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm 16mm;
+  }
+  body {
+    background: #fff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .paper-shell {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+  .badge-difficulty {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+.print-only { display: none; }

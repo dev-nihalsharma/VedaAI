@@ -1,0 +1,27 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Optional local MongoDB. Use this when the assignment-provided Atlas URI
+  # is not reachable (IP not whitelisted, offline, etc).
+  # Override MONGODB_URI in .env to use it:
+  #   MONGODB_URI=mongodb://localhost:27017/vedaai
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  redis_data:
+  mongo_data:
