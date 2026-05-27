@@ -73,13 +73,8 @@ docker compose up -d
 
 This starts:
 - Redis on `localhost:6379`
-- MongoDB on `localhost:27017` (optional fallback)
 
 By default `.env` points `MONGODB_URI` at the assignment-provided Atlas cluster. If the cluster rejects your IP (Atlas IP allowlist) or you'd rather use a local DB, just change `MONGODB_URI` in `.env` to:
-
-```
-MONGODB_URI=mongodb://localhost:27017/vedaai
-```
 
 If Docker isn't available, install Redis natively (`brew install redis && brew services start redis`). For local Mongo without Docker: `brew install mongodb-community && brew services start mongodb-community`.
 
