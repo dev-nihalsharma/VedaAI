@@ -39,13 +39,13 @@ ENV HOSTNAME=0.0.0.0
 
 RUN addgroup -S app && adduser -S app -G app
 
-# Standalone output: server.js + minimal node_modules under .next/standalone,
-# plus static assets under .next/static. outputFileTracingRoot=repo root means
-# the standalone tree lives at /app/frontend/.next/standalone/frontend.
+# Next.js always places server.js at the root of .next/standalone regardless
+# of outputFileTracingRoot. Static assets must sit at .next/static relative to
+# server.js (i.e. /app/.next/static).
 COPY --from=builder --chown=app:app /app/frontend/.next/standalone ./
-COPY --from=builder --chown=app:app /app/frontend/.next/static ./frontend/.next/static
+COPY --from=builder --chown=app:app /app/frontend/.next/static ./.next/static
 
 USER app
 EXPOSE 3000
 
-CMD ["node", "frontend/server.js"]
+CMD ["node", "server.js"]
