@@ -1,0 +1,25 @@
+# Production overrides for EC2 deployment.
+#
+# On the EC2 host (after setting up .env and pulling images):
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-build
+#
+# BACKEND_IMAGE / FRONTEND_IMAGE come from .env (CI writes GHCR tags into it).
+
+services:
+  redis:
+    ports: []           # do not expose Redis on the public interface
+
+  backend:
+    pull_policy: always
+    ports: []           # only nginx talks to backend (internal network)
+
+  frontend:
+    pull_policy: always
+    ports: []
+
+  nginx:
+    ports:
+      - "80:80"
+      # Uncomment after wiring TLS (see DEPLOY.md):
+      # - "443:443"
