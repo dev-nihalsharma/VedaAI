@@ -1,4 +1,5 @@
 'use client';
+import { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -17,7 +18,7 @@ const NAV = [
   { href: '/assignments?tab=library', label: 'My Library', icon: <FaBook />, tab: 'library' },
 ];
 
-export function Sidebar() {
+function SidebarContent() {
   const pathname = usePathname() || '';
   const searchParams = useSearchParams();
   const activeTab = searchParams.get('tab');
@@ -82,5 +83,13 @@ export function Sidebar() {
         </div>
       </div>
     </aside>
+  );
+}
+
+export function Sidebar() {
+  return (
+    <Suspense>
+      <SidebarContent />
+    </Suspense>
   );
 }

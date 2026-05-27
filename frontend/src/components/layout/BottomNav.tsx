@@ -1,4 +1,5 @@
 'use client';
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { FaHome, FaBook } from 'react-icons/fa';
@@ -12,13 +13,13 @@ const TABS = [
   { href: '/assignments?tab=toolkit', label: 'AI Toolkit', tab: 'toolkit', icon: FaBrain },
 ];
 
-export function BottomNav() {
+function BottomNavContent() {
   const pathname = usePathname() || '';
   const searchParams = useSearchParams();
   const activeTab = searchParams.get('tab');
 
   return (
-    <nav className="lg:hidden no-print fixed bottom-3 left-3 right-3 z-50 bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] flex items-stretch h-16">
+    <>
       {TABS.map(({ href, label, tab, icon: Icon }) => {
         const active = tab
           ? activeTab === tab
@@ -36,6 +37,16 @@ export function BottomNav() {
           </Link>
         );
       })}
+    </>
+  );
+}
+
+export function BottomNav() {
+  return (
+    <nav className="lg:hidden no-print fixed bottom-3 left-3 right-3 z-50 bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] flex items-stretch h-16">
+      <Suspense>
+        <BottomNavContent />
+      </Suspense>
     </nav>
   );
 }

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Topbar } from '@/components/layout/Topbar';
 import { EmptyState } from '@/components/assignments/EmptyState';
@@ -117,7 +117,7 @@ function LibraryTab() {
   );
 }
 
-export default function AssignmentsPage() {
+function AssignmentsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
@@ -193,5 +193,13 @@ export default function AssignmentsPage() {
         +
       </button>
     </>
+  );
+}
+
+export default function AssignmentsPage() {
+  return (
+    <Suspense>
+      <AssignmentsContent />
+    </Suspense>
   );
 }
