@@ -1,18 +1,20 @@
-import Anthropic from '@anthropic-ai/sdk';
+import AnthropicBedrock from '@anthropic-ai/bedrock-sdk';
+import type Anthropic from '@anthropic-ai/sdk';
 import { env } from '../config/env';
 import { SYSTEM_PROMPT, PAPER_TOOL } from './prompt';
 import { PaperSchema, ValidatedPaper } from './schema';
 
-// Sonnet 4.6 — current Sonnet generation per the runtime context (model ids: claude-sonnet-4-6).
-export const CLAUDE_MODEL = 'claude-sonnet-4-6';
+// Bedrock model ID for Claude Sonnet 4.6
+export const CLAUDE_MODEL = 'us.anthropic.claude-sonnet-4-6';
 
-let client: Anthropic | null = null;
-function getClient(): Anthropic {
+let client: AnthropicBedrock | null = null;
+function getClient(): AnthropicBedrock {
   if (!client) {
-    if (!env.ANTHROPIC_API_KEY) {
-      throw new Error('ANTHROPIC_API_KEY is not set');
-    }
-    client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
+    client = new AnthropicBedrock({
+      awsAccessKey: env.AWS_ACCESS_KEY_ID,
+      awsSecretKey: env.AWS_SECRET_ACCESS_KEY,
+      awsRegion: env.AWS_DEFAULT_REGION,
+    });
   }
   return client;
 }
@@ -20,7 +22,6 @@ function getClient(): Anthropic {
 export async function generatePaper(userPrompt: string): Promise<ValidatedPaper> {
   const anthropic = getClient();
 
-  // First attempt
   let attempt = 0;
   let lastError = '';
   while (attempt < 2) {
@@ -40,8 +41,6 @@ export async function generatePaper(userPrompt: string): Promise<ValidatedPaper>
         {
           type: 'text',
           text: SYSTEM_PROMPT,
-          // Prompt caching on the stable system prefix. Cast: cache_control
-          // is supported at runtime but missing from this SDK version's TextBlockParam.
           cache_control: { type: 'ephemeral' },
         } as any,
       ],
@@ -50,9 +49,9 @@ export async function generatePaper(userPrompt: string): Promise<ValidatedPaper>
       messages,
     });
 
-    const toolBlock = response.content.find(
-      (b): b is Anthropic.Messages.ToolUseBlock => b.type === 'tool_use'
-    );
+    const toolBlock = response.content.find((b) => b.type === 'tool_use') as
+      | Anthropic.Messages.ToolUseBlock
+      | undefined;
     if (!toolBlock) {
       lastError = 'no tool_use block in response';
       attempt++;

@@ -17,7 +17,7 @@ export default function AssignmentDetailPage() {
   const router = useRouter();
 
   const { data: assignment, refetch: refetchAssignment } = useGetAssignmentQuery(id, { skip: !id });
-  const { data: paper, refetch: refetchPaper, error: paperError, isFetching: paperFetching } =
+  const { data: paper, error: paperError, isFetching: paperFetching } =
     useGetPaperQuery(id, { skip: !id || assignment?.status !== 'completed' });
   const [regenerate, { isLoading: regenerating }] = useRegenerateMutation();
 
@@ -29,9 +29,8 @@ export default function AssignmentDetailPage() {
   useEffect(() => {
     if (job?.status === 'completed') {
       refetchAssignment();
-      refetchPaper();
     }
-  }, [job?.status, refetchAssignment, refetchPaper]);
+  }, [job?.status, refetchAssignment]);
 
   const notReady =
     assignment && assignment.status !== 'completed' && !paper;

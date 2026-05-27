@@ -15,7 +15,9 @@ export const env = {
   MONGODB_URI: required('MONGODB_URI'),
   REDIS_URL: required('REDIS_URL'),
   JWT_SECRET: required('JWT_SECRET'),
-  ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || '',
+  AWS_ACCESS_KEY_ID: required('AWS_ACCESS_KEY_ID'),
+  AWS_SECRET_ACCESS_KEY: required('AWS_SECRET_ACCESS_KEY'),
+  AWS_DEFAULT_REGION: process.env.AWS_DEFAULT_REGION || 'us-east-1',
   PORT: parseInt(process.env.PORT || '4000', 10),
   CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:3000',
 };

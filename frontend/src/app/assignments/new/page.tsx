@@ -11,10 +11,9 @@ import { useCreateAssignmentMutation } from '@/store/api';
 import type { QuestionTypeKind, QuestionTypeSpec } from '@shared/types';
 import type { RootState } from '@/store';
 
-function tomorrowISO(): string {
+function todayISO(): string {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() + 1);
   return d.toISOString().slice(0, 10);
 }
 
@@ -22,7 +21,7 @@ export default function NewAssignmentPage() {
   const router = useRouter();
   const [title, setTitle] = useState('Quiz on Electricity');
   const [file, setFile] = useState<PickedFile | null>(null);
-  const [dueDate, setDueDate] = useState(tomorrowISO());
+  const [dueDate, setDueDate] = useState(todayISO());
   const [rows, setRows] = useState<QuestionTypeSpec[]>([
     { type: 'mcq', count: 4, marks: 1 },
     { type: 'short', count: 3, marks: 2 },
@@ -71,8 +70,8 @@ export default function NewAssignmentPage() {
       setFormError('Due date is required');
       return;
     }
-    if (new Date(dueDate) < new Date(tomorrowISO())) {
-      setFormError('Due date must be at least tomorrow');
+    if (new Date(dueDate) < new Date(todayISO())) {
+      setFormError('Due date cannot be in the past');
       return;
     }
     if (rows.length === 0) {
@@ -137,7 +136,7 @@ export default function NewAssignmentPage() {
               <input
                 type="date"
                 value={dueDate}
-                min={tomorrowISO()}
+                min={todayISO()}
                 onChange={(e) => setDueDate(e.target.value)}
                 className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-brand/20"
               />
