@@ -114,8 +114,8 @@ jobs:
             echo "BACKEND_IMAGE=${{ needs.build.outputs.backend_image }}"   >> .env
             echo "FRONTEND_IMAGE=${{ needs.build.outputs.frontend_image }}" >> .env
 
-            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
+            echo "${{ secrets.GHCR_TOKEN }}" | sudo docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
 
-            docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
-            docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-build --remove-orphans
-            docker image prune -f
+            sudo docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
+            sudo docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --no-build --remove-orphans
+            sudo docker image prune -f
